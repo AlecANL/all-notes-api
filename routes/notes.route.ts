@@ -1,37 +1,29 @@
-import {
-  createNote,
-  deleteNote,
-  getAllNotes,
-  getNote,
-  updateNote,
-} from '../controllers/notes.controller';
 import { Router } from 'express';
 import { validateHandler } from '../utils/middlewares/validate-handler';
-import {
-  noteIdSchema,
-  createNoteSchema,
-  updateNoteSchema,
-} from '../utils/schemas/note.schema';
+import * as notesController from '../controllers/notes.controller';
+import * as notesSchemas from '../utils/schemas/note.schema';
 
 const notesRouter = Router();
 
-notesRouter.get('/', getAllNotes);
+notesRouter.get('/', notesController.getAllNotes);
+
 notesRouter.get(
   '/:id',
-  validateHandler({ id: noteIdSchema }, 'params'),
-  getNote
+  validateHandler({ id: notesSchemas.noteIdSchema }, 'params'),
+  notesController.getNote
 );
-notesRouter.post('/', validateHandler(createNoteSchema), createNote);
+
 notesRouter.put(
   '/:id',
-  validateHandler({ id: noteIdSchema }, 'params'),
-  validateHandler(updateNoteSchema),
-  updateNote
+  validateHandler({ id: notesSchemas.noteIdSchema }, 'params'),
+  validateHandler(notesSchemas.updateNoteSchema),
+  notesController.updateNote
 );
+
 notesRouter.delete(
   '/:id',
-  validateHandler({ id: noteIdSchema }, 'params'),
-  deleteNote
+  validateHandler({ id: notesSchemas.noteIdSchema }, 'params'),
+  notesController.deleteNote
 );
 
 export { notesRouter };

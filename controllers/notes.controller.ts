@@ -23,16 +23,9 @@ export async function getNote(req: Request, res: Response, next: NextFunction) {
   const { id } = req.params;
   try {
     const note: any = await notesService.getNote(id);
-    if (!note) {
-      res.status(200).json({
-        note,
-        message: 'Not Found Note :)',
-      });
-      return;
-    }
     res.status(200).json({
       note,
-      message: 'get Note',
+      message: note ? 'get Note' : 'note not found',
     });
   } catch (error) {
     next(error);
@@ -46,11 +39,8 @@ export async function createNote(
   next: NextFunction
 ) {
   const note = req.body;
-  console.log('from body');
-  console.log(note);
   try {
     const noteCreated: IPostNote = await notesService.createNote(note);
-    console.log(noteCreated);
     res.status(201).json({
       note: noteCreated,
       message: 'Note Crated',
@@ -66,13 +56,13 @@ export async function updateNote(
   res: Response,
   next: NextFunction
 ) {
-  const id = req.params;
+  const { id } = req.params;
   const noteDidUpdated = req.body;
   try {
     const note = await notesService.updateNote(noteDidUpdated, `${id}`);
     res.status(200).json({
       note,
-      message: 'note updated',
+      message: note ? 'note updated' : 'whoops note cannot update',
     });
   } catch (error) {
     next(error);
@@ -85,12 +75,12 @@ export async function deleteNote(
   res: Response,
   next: NextFunction
 ) {
-  const id = req.params;
+  const { id } = req.params;
   try {
-    const note = await notesService.getNote(`${id}`);
+    const note = await notesService.deleteNote(`${id}`);
     res.status(200).json({
       note,
-      message: 'note deleted',
+      message: note ? 'note deleted' : 'whoops note cannot deleted',
     });
   } catch (error) {
     next(error);

@@ -1,48 +1,42 @@
 import express, { Application } from 'express';
 import morgan from 'morgan';
+import { config } from '../config/config';
+import { TEndPoints } from '../types/server.types';
 import { notesRouter } from '../routes/notes.route';
-import {
-  logErrors,
-  wrapperError,
-  errorHandler,
-} from '../utils/middlewares/error-handler';
-import cors from 'cors';
 import { notFoundHandler } from '../utils/middlewares/note-found-handler';
-
-type TEndPoints = {
-  users: string;
-  notes: string;
-};
-
+import * as errorsHandler from '../utils/middlewares/error-handler';
+import cors from 'cors';
 class Server {
   private app: Application;
+  private port: number;
   private endPoints: TEndPoints;
+
   constructor() {
     this.endPoints = {
-      users: '/api/users',
       notes: '/api/notes',
     };
     this.app = express();
-    this.app.use(cors());
+    this.port = +config.port;
     this.app.use(express.json());
+    this.app.use(cors());
     this.router();
     this.middlewares();
   }
-  listen() {
-    this.app.listen(8000, () => {
-      console.log(`server running: http://localhost:8001`);
+
+  init() {
+    this.app.listen(this.port, () => {
+      console.log(`server running... http://localhost:${this.port}`);
     });
-  }
-  private contextExecution() {}
-  private router() {
-    this.app.use(this.endPoints.notes, notesRouter);
   }
   private middlewares() {
     this.app.use(morgan('dev'));
     this.app.use(notFoundHandler);
-    this.app.use(logErrors);
-    this.app.use(wrapperError);
-    this.app.use(errorHandler);
+    this.app.use(errorsHandler.logErrors);
+    this.app.use(errorsHandler.wrapperError);
+    this.app.use(errorsHandler.errorHandler);
+  }
+  private router() {
+    this.app.use(this.endPoints.notes, notesRouter);
   }
 }
 

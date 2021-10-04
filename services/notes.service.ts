@@ -24,11 +24,11 @@ class NotesService {
     return noteCreated;
   }
   async updateNote(note: IPostNote, id: string) {
-    const noteUpdated = await Promise.resolve(notesSchemas[0]);
-    return noteUpdated;
+    const noteUpdated = await this.mongoDB.update(this.collection, note, id);
+    return noteUpdated || null;
   }
-  async deleteNote(note: IPostNote) {
-    const noteDeleted = await Promise.resolve(notesSchemas[0]);
+  async deleteNote(id: string) {
+    const noteDeleted = await this.mongoDB.delete(this.collection, id);
     return noteDeleted;
   }
 }

@@ -58,6 +58,24 @@ class MongoLib {
       console.error(error);
     }
   }
+  async update(collection: Model<INoteSchema>, note: IPostNote, id: string) {
+    console.log(id);
+    try {
+      await collection.findOneAndUpdate({ _id: id }, { ...note });
+      const noteUpdated = await collection.findOne({ _id: id });
+      return noteUpdated;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  async delete(collection: Model<INoteSchema>, id: string) {
+    try {
+      const noteDeleted = await collection.findByIdAndDelete(id);
+      return noteDeleted;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
 
 export default MongoLib;

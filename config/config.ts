@@ -7,4 +7,5 @@ export const config = {
   dbName: process.env.DB_NAME,
   dbPassword: process.env.DB_PASSWORD,
   dbUSer: process.env.DB_USER,
+  port: process.env.PORT || 3001,
 };
