@@ -6,6 +6,6 @@ export interface INotes {
 
 export interface IPostNote {
   note: string;
-  idUser: string;
   isPrivate: boolean;
+  user: object | null;
 }

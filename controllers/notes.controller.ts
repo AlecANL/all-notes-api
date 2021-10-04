@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import notesService from '../services/notes.service';
-import { INotes } from '../types/notes.types';
+import { INotes, IPostNote } from '../types/notes.types';
 
 export async function getAllNotes(
   req: Request,
@@ -20,9 +20,16 @@ export async function getAllNotes(
 }
 
 export async function getNote(req: Request, res: Response, next: NextFunction) {
-  const id = req.params;
+  const { id } = req.params;
   try {
-    const note = await notesService.getNote(`${id}`);
+    const note: any = await notesService.getNote(id);
+    if (!note) {
+      res.status(200).json({
+        note,
+        message: 'Not Found Note :)',
+      });
+      return;
+    }
     res.status(200).json({
       note,
       message: 'get Note',
@@ -39,11 +46,14 @@ export async function createNote(
   next: NextFunction
 ) {
   const note = req.body;
+  console.log('from body');
+  console.log(note);
   try {
-    const noteCreated: INotes = await notesService.createNote(note);
+    const noteCreated: IPostNote = await notesService.createNote(note);
+    console.log(noteCreated);
     res.status(201).json({
       note: noteCreated,
-      message: 'get Note',
+      message: 'Note Crated',
     });
   } catch (error) {
     next(error);
@@ -62,7 +72,7 @@ export async function updateNote(
     const note = await notesService.updateNote(noteDidUpdated, `${id}`);
     res.status(200).json({
       note,
-      message: 'get Note',
+      message: 'note updated',
     });
   } catch (error) {
     next(error);
@@ -80,7 +90,7 @@ export async function deleteNote(
     const note = await notesService.getNote(`${id}`);
     res.status(200).json({
       note,
-      message: 'get Note',
+      message: 'note deleted',
     });
   } catch (error) {
     next(error);

@@ -23,20 +23,21 @@ class Server {
       notes: '/api/notes',
     };
     this.app = express();
+    this.app.use(cors());
     this.app.use(express.json());
     this.router();
     this.middlewares();
   }
   listen() {
-    this.app.listen(3001, () => {
-      console.log(`server running: http://localhost:3001`);
+    this.app.listen(8000, () => {
+      console.log(`server running: http://localhost:8001`);
     });
   }
+  private contextExecution() {}
   private router() {
     this.app.use(this.endPoints.notes, notesRouter);
   }
   private middlewares() {
-    this.app.use(cors());
     this.app.use(morgan('dev'));
     this.app.use(notFoundHandler);
     this.app.use(logErrors);

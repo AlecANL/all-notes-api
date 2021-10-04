@@ -7,7 +7,11 @@ import {
 } from '../controllers/notes.controller';
 import { Router } from 'express';
 import { validateHandler } from '../utils/middlewares/validate-handler';
-import { noteIdSchema } from '../utils/schemas/note.schema';
+import {
+  noteIdSchema,
+  createNoteSchema,
+  updateNoteSchema,
+} from '../utils/schemas/note.schema';
 
 const notesRouter = Router();
 
@@ -17,8 +21,17 @@ notesRouter.get(
   validateHandler({ id: noteIdSchema }, 'params'),
   getNote
 );
-notesRouter.post('/', createNote);
-notesRouter.put('/:id', updateNote);
-notesRouter.delete('/:id', deleteNote);
+notesRouter.post('/', validateHandler(createNoteSchema), createNote);
+notesRouter.put(
+  '/:id',
+  validateHandler({ id: noteIdSchema }, 'params'),
+  validateHandler(updateNoteSchema),
+  updateNote
+);
+notesRouter.delete(
+  '/:id',
+  validateHandler({ id: noteIdSchema }, 'params'),
+  deleteNote
+);
 
 export { notesRouter };
