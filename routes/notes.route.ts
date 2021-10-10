@@ -20,6 +20,12 @@ notesRouter.put(
   notesController.updateNote
 );
 
+notesRouter.post(
+  '/',
+  validateHandler(notesSchemas.createNoteSchema),
+  notesController.createNote
+);
+
 notesRouter.delete(
   '/:id',
   validateHandler({ id: notesSchemas.noteIdSchema }, 'params'),
