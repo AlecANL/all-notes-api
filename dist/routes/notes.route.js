@@ -29,5 +29,6 @@ exports.notesRouter = notesRouter;
 notesRouter.get('/', notesController.getAllNotes);
 notesRouter.get('/:id', (0, validate_handler_1.validateHandler)({ id: notesSchemas.noteIdSchema }, 'params'), notesController.getNote);
 notesRouter.put('/:id', (0, validate_handler_1.validateHandler)({ id: notesSchemas.noteIdSchema }, 'params'), (0, validate_handler_1.validateHandler)(notesSchemas.updateNoteSchema), notesController.updateNote);
+notesRouter.post('/', (0, validate_handler_1.validateHandler)(notesSchemas.createNoteSchema), notesController.createNote);
 notesRouter.delete('/:id', (0, validate_handler_1.validateHandler)({ id: notesSchemas.noteIdSchema }, 'params'), notesController.deleteNote);
 //# sourceMappingURL=notes.route.js.map
